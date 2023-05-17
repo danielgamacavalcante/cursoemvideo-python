@@ -10,7 +10,7 @@ import cv2
 
 
 windowExecute = str('PokeMMO')
-
+path = r'c:/Users/user/Desktop/repositorio-de-outros/cursoemvideo-python/img/'
 #iniciando código
 pyautogui.alert('O código vai começar. Não utilize nada do computador até o código finalizar!')
 password = input('Informe senha: ')
@@ -66,7 +66,7 @@ def getPosition():
        procurar = 'nao'    
        
 pyautogui.moveTo(669,359,duration=0.5)
-pyautogui.sleep(4.5)
+pyautogui.sleep(6)
 pyautogui.write("zatiros",interval=0.2)
 pyautogui.press('enter')
 pyautogui.write(password)
@@ -79,32 +79,72 @@ pyautogui.sleep(1)
 pyautogui.keyDown(numberItem)
 pyautogui.keyUp(numberItem)
 pyautogui.moveTo(356,37,duration=0.3)
-pyautogui.sleep(3.5)
 
-image = pyautogui.screenshot(region=(381,52,300,100))
-image.save(r'c:/Users/user/Desktop/repositorio-de-outros/cursoemvideo-python/img/minha_imagem.png')
 
-caminho = r"C:\Users\user\AppData\Local\Programs\Tesseract-OCR"
-pytesseract.pytesseract.tesseract_cmd = caminho+r"\tesseract.exe"
-image2 = cv2.imread(r'c:/Users/user/Desktop/repositorio-de-outros/cursoemvideo-python/img/minha_imagem.png')
-text = pytesseract.image_to_string(image2)
-open('texto.txt','w').write(text)
-print(text)
-if(text == open('texto.txt','r')):
-   pyautogui.click()
-   pyautogui.sleep(5.5)
-   name_poke = pyautogui.screenshot()
-   name_poke.save(r'c:/Users/user/Desktop/repositorio-de-outros/cursoemvideo-python/img/nome_poke.png')
-   image2 = cv2.imread('nome_poke.png')
-else:
-   if(text =='Not even a nibble... '):
+while True:
+   if kb.is_pressed("e"):
+      break
+   pyautogui.sleep(3.5)   
+   image_save = pyautogui.screenshot(region=(381,52,300,100))
+   image_save.save(path+'minha_imagem.png')
+
+   caminho = r"C:\Users\user\AppData\Local\Programs\Tesseract-OCR"
+   pytesseract.pytesseract.tesseract_cmd = caminho+r"\tesseract.exe"
+   image_read = cv2.imread(path+'minha_imagem.png')
+   text = pytesseract.image_to_string(image_read,lang="por")
+   open('texto.txt','w').write(text)
+
+   with open('texto.txt','r') as arquivo:
+      msg = arquivo.readlines()
+   print(msg[0])
+   if(msg[0] == 'Landed a Pokémon!\n' ):
       pyautogui.click()
-      pyautogui.sleep(0.5)
-      pyautogui.click()
-   else:
-      print("Nada feito")
+      pyautogui.sleep(7)
+      name_poke_save = pyautogui.screenshot(region=(249,142,170,30))
+      name_poke_save.save(path+'nome_poke.png')
+      name_poke_read = cv2.imread(path+'nome_poke.png')
+      pytesseract.pytesseract.tesseract_cmd = caminho+r"\tesseract.exe"
+      text_name_poke = pytesseract.image_to_string(name_poke_read)
+      open('textoNamePoke.txt','w').write(text_name_poke)
+      print(text_name_poke)
+      with open('textoNamePoke.txt','r')as arquivo:
+         msg_name_poke = arquivo.readlines()
+         # print("Msg Name Poke: "+msg_name_poke[0])
       
-      3
+      pyautogui.sleep(3)  
+      if(msg_name_poke == ''):
+         pytesseract.pytesseract.tesseract_cmd = caminho+r"\tesseract.exe"
+         text_name_poke = pytesseract.image_to_string(name_poke_read)
+         open('textoNamePoke.txt','w').write(text_name_poke)
+         print(text_name_poke)
+         with open('textoNamePoke.txt','r')as arquivo:
+            msg_name_poke = arquivo.readlines()
+      if(msg_name_poke[0] == 'MagikarpNv.' or msg_name_poke[0]== 'Magikarp'):
+         pyautogui.moveTo(524,532,duration=0.5)
+         pyautogui.sleep(5.5)
+         pyautogui.click()
+         pyautogui.moveTo(356,37,duration=0.5)
+         pyautogui.click()
+         pyautogui.sleep(3.5)  
+      else:
+         pyautogui.moveTo(524,532,duration=0.5)
+         pyautogui.sleep(5.5)
+         pyautogui.click()
+         pyautogui.moveTo(356,37,duration=0.5)
+         pyautogui.click()
+         pyautogui.sleep(3.5)   
+   else:
+      if(msg[0] =='Not even a nibble...\n'):
+         pyautogui.click()
+         pyautogui.sleep(0.5)
+         pyautogui.click()
+         pyautogui.sleep(3.5)   
+         
+      else:
+         print("Nada feito")
+         break
+   
+      
       
 
 # pyautogui.click()
