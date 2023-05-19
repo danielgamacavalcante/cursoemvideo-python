@@ -7,6 +7,7 @@ import time
 import pygetwindow
 import pytesseract
 import cv2
+from PIL import Image
 
 
 windowExecute = str('PokeMMO')
@@ -102,24 +103,21 @@ while True:
       pyautogui.sleep(7)
       name_poke_save = pyautogui.screenshot(region=(249,142,170,30))
       name_poke_save.save(path+'nome_poke.png')
-      name_poke_read = cv2.imread(path+'nome_poke.png')
+      img = Image.open(path+'nome_poke.png')
+      img_gray =img.convert('L')
+      img_gray.save(path+'nome_poke_gray.png')
+      name_poke_read = cv2.imread(path+'nome_poke_gray.png')
       pytesseract.pytesseract.tesseract_cmd = caminho+r"\tesseract.exe"
-      text_name_poke = pytesseract.image_to_string(name_poke_read)
+      text_name_poke = pytesseract.image_to_string(name_poke_read,timeout=1.5)
+      if(text_name_poke == ''):
+         text_name_poke = pytesseract.image_to_string(name_poke_read,timeout=1.5)
       open('textoNamePoke.txt','w').write(text_name_poke)
       print(text_name_poke)
       with open('textoNamePoke.txt','r')as arquivo:
          msg_name_poke = arquivo.readlines()
          # print("Msg Name Poke: "+msg_name_poke[0])
-      
       pyautogui.sleep(3)  
-      if(msg_name_poke == ''):
-         pytesseract.pytesseract.tesseract_cmd = caminho+r"\tesseract.exe"
-         text_name_poke = pytesseract.image_to_string(name_poke_read)
-         open('textoNamePoke.txt','w').write(text_name_poke)
-         print(text_name_poke)
-         with open('textoNamePoke.txt','r')as arquivo:
-            msg_name_poke = arquivo.readlines()
-      if(msg_name_poke[0] == 'MagikarpNv.' or msg_name_poke[0]== 'Magikarp'):
+      if(msg_name_poke[0] == 'ShinnyMagikarpNv.' or msg_name_poke[0]== 'Shinny Magikarp'):
          pyautogui.moveTo(524,532,duration=0.5)
          pyautogui.sleep(5.5)
          pyautogui.click()
